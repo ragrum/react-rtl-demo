@@ -8,14 +8,14 @@ export default async function handler(req, res) {
 
   if (email === "pepe@example.com" && password === "12345") {
     await sleep(1000);
-    res.status(200).json({ name: "John Doe" });
+    res.status(200).end();
   }
 
   if (email && password) {
     await sleep(1000);
-    res.status(401).json({ name: "John Doe" });
+    res.status(401).end();
   }
 
   await sleep(1000);
-  res.status(400).json({ name: "John Doe" });
+  res.status(400).end();
 }
