@@ -1,6 +1,35 @@
+import { useState } from "react";
 import Head from "next/head";
 
+const signIn = async (email, password) => {
+  const signIn = await fetch("/api/sign-in", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (signIn.status !== 200) {
+    throw new Error("Error while signing in.");
+  }
+};
+
 export default function Home() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [status, setStatus] = useState("idle"); // "idle" | "signing-in" | "error" | "success"
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setStatus("signing-in");
+
+    try {
+      await signIn(email, password);
+      setStatus("success");
+    } catch (error) {
+      setStatus("error");
+    }
+  }
+
   return (
     <>
       <Head>
@@ -17,20 +46,11 @@ export default function Home() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600 max-w">
-            Or
-            <a
-              href="#"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              start your 14-day free trial
-            </a>
-          </p>
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <form className="space-y-6" action="#" method="POST">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="email"
@@ -44,8 +64,8 @@ export default function Home() {
                     name="email"
                     type="email"
                     autoComplete="email"
-                    required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    onChange={(event) => setEmail(event.target.value)}
                   />
                 </div>
               </div>
@@ -63,8 +83,8 @@ export default function Home() {
                     name="password"
                     type="password"
                     autoComplete="current-password"
-                    required
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    onChange={(event) => setPassword(event.target.value)}
                   />
                 </div>
               </div>
@@ -104,6 +124,17 @@ export default function Home() {
                 </button>
               </div>
             </form>
+
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">{status}</span>
+                </div>
+              </div>
+            </div>
 
             <div className="mt-6">
               <div className="relative">
