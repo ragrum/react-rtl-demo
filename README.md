@@ -10,6 +10,8 @@ npm install
 npm run dev
 ```
 
+The code in this repository was developed using `Node v12.19.0`.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the demos index.
 
 ## Resources
