@@ -9,7 +9,7 @@ const signIn = async (email, password) => {
   });
 
   if (signIn.status !== 200) {
-    throw new Error("Error while signing in.");
+    throw new Error(signIn.status);
   }
 };
 
@@ -17,16 +17,19 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("idle"); // "idle" | "signing-in" | "error" | "success"
+  const [errorCode, setErrorCode] = useState(""); // "" | "400" | "401"
 
   async function handleSubmit(event) {
     event.preventDefault();
     setStatus("signing-in");
+    setErrorCode("");
 
     try {
       await signIn(email, password);
       setStatus("success");
-    } catch (error) {
+    } catch ({ message: errorCode }) {
       setStatus("error");
+      setErrorCode(errorCode);
     }
   }
 
@@ -131,7 +134,9 @@ export default function Home() {
                   <div className="w-full border-t border-gray-300"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-500">{status}</span>
+                  <span className="px-2 bg-white text-gray-500">
+                    {status === "error" ? `${status} (${errorCode})` : status}
+                  </span>
                 </div>
               </div>
             </div>
