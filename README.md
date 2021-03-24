@@ -28,6 +28,29 @@ The project doesn't have to be running to run the tests, they're independent. Th
 
 ## Resources and Notes
 
+Test runner [Jest](https://jestjs.io/).
+
+Auxiliary testing library for React [React Testing Library](https://testing-library.com/docs/react-testing-library/intro).
+
+DOM assertions library [jest-dom](https://testing-library.com/docs/ecosystem-jest-dom).
+
+User events simulation library [user-event](https://testing-library.com/docs/ecosystem-user-event).
+
+API mocking with [Mocking Service Worker](https://mswjs.io/).
+
+### Articles
+
+[Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
+
+[Avoid the Test User](https://kentcdodds.com/blog/avoid-the-test-user)
+
+[The Merits of Mocking](https://kentcdodds.com/blog/the-merits-of-mocking)
+
+[Static vs Unit vs Integration vs E2E Testing for Frontend Apps](https://kentcdodds.com/blog/unit-vs-integration-vs-e2e-tests)
+
+
+[Fix the "not wrapped in act(...)" warning](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning)
+
 ### Snapshot Testing
 
 To keep snapshots short, prefer `toMatchInlineSnapshot` over `toMatchSnapshot`.
