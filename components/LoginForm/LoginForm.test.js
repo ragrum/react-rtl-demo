@@ -1,9 +1,12 @@
+import { rest } from "msw";
+import { setupServer } from "msw/node";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/extend-expect";
 
 import LoginForm from "./LoginForm";
 
-describe.skip("LoginForm rendering", () => {
+describe("LoginForm rendering", () => {
   it("renders without crashing", () => {
     render(<LoginForm />);
   });
@@ -59,9 +62,108 @@ describe.skip("LoginForm rendering", () => {
 });
 
 describe("LoginForm working", () => {
-  it("starts with idle status", () => {
+  const apiServer = setupServer(
+    rest.post("/api/sign-in", (req, res, ctx) => {
+      const { email, password } = req.body;
+
+      if (email === "pepe@example.com" && password === "12345") {
+        return res(ctx.status(200));
+      }
+
+      if (email && password) {
+        return res(ctx.status(401));
+      }
+
+      return res(ctx.status(400));
+    })
+  );
+
+  beforeAll(() => {
+    apiServer.listen();
+  });
+  afterEach(() => apiServer.resetHandlers());
+  afterAll(() => apiServer.close());
+
+  it("starts in the idle status", () => {
     render(<LoginForm />);
 
-    expect(screen.getByTestId("status")).toHaveTextContent("idle");
+    expect(screen.getByText(/idle/i)).toBeInTheDocument();
+  });
+
+  it("goes into the signing-in status when submitting the form", async () => {
+    apiServer.use(
+      rest.post("/api/sign-in", (req, res, ctx) => {
+        return res.networkError("Failed to connect");
+      })
+    );
+    render(<LoginForm />);
+
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    expect(await screen.findByText(/signing-in/i)).toBeInTheDocument();
+  });
+
+  it("goes into the error (400) status when submitting the form without email and password", async () => {
+    render(<LoginForm />);
+
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    expect(await screen.findByText(/error \(400\)/i)).toBeInTheDocument();
+  });
+
+  it("goes into the error (400) status when submitting the form without email", async () => {
+    render(<LoginForm />);
+
+    userEvent.type(screen.getByLabelText("Password"), "12345");
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    expect(await screen.findByText(/error \(400\)/i)).toBeInTheDocument();
+  });
+
+  it("goes into the error (400) status when submitting the form without password", async () => {
+    render(<LoginForm />);
+
+    userEvent.type(screen.getByLabelText("Email address"), "pepe@example.com");
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    expect(await screen.findByText(/error \(400\)/i)).toBeInTheDocument();
+  });
+
+  it("goes into the error (401) status when submitting the wrong email", async () => {
+    render(<LoginForm />);
+
+    userEvent.type(
+      screen.getByLabelText("Email address"),
+      "not-pepe@example.com"
+    );
+    userEvent.type(screen.getByLabelText("Password"), "12345");
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    expect(await screen.findByText(/error \(401\)/i)).toBeInTheDocument();
+  });
+
+  it("goes into the error (401) status when submitting the wrong password", async () => {
+    render(<LoginForm />);
+
+    userEvent.type(screen.getByLabelText("Email address"), "pepe@example.com");
+    userEvent.type(screen.getByLabelText("Password"), "01234");
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    expect(await screen.findByText(/error \(401\)/i)).toBeInTheDocument();
+  });
+
+  it("goes into the error (401) status when submitting the wrong email and password", async () => {
+    render(<LoginForm />);
+
+    userEvent.type(
+      screen.getByLabelText("Email address"),
+      "not-pepe@example.com"
+    );
+    userEvent.type(screen.getByLabelText("Password"), "01234");
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    expect(await screen.findByText(/error \(401\)/i)).toBeInTheDocument();
+  });
+
+  it("goes into the success status when submitting the correct email and password", async () => {
+    render(<LoginForm />);
+
+    userEvent.type(screen.getByLabelText("Email address"), "pepe@example.com");
+    userEvent.type(screen.getByLabelText("Password"), "12345");
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    expect(await screen.findByText(/success/i)).toBeInTheDocument();
   });
 });
