@@ -1,7 +1,7 @@
 import { useState } from "react";
 import fetch from "unfetch";
 
-const signIn = async (email, password) => {
+export const signIn = async (email, password) => {
   const signIn = await fetch("/api/sign-in", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -13,7 +13,7 @@ const signIn = async (email, password) => {
   }
 };
 
-export default function LoginForm() {
+export default function LoginForm({ onSubmit = signIn }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [status, setStatus] = useState("idle"); // "idle" | "signing-in" | "error" | "success"
@@ -25,7 +25,7 @@ export default function LoginForm() {
     setErrorCode("");
 
     try {
-      await signIn(email, password);
+      await onSubmit(email, password);
       setStatus("success");
     } catch ({ message: errorCode }) {
       setStatus("error");

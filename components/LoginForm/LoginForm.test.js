@@ -1,9 +1,8 @@
 import { rest } from "msw";
 import { setupServer } from "msw/node";
-import { render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom/extend-expect";
-
 import LoginForm from "./LoginForm";
 
 describe("LoginForm rendering", () => {
@@ -114,6 +113,17 @@ describe("LoginForm working", () => {
     render(<LoginForm />);
 
     expect(screen.getByText(/idle/i)).toBeInTheDocument();
+  });
+
+  it("onSubmit handler gets called when signing in", async () => {
+    const promise = Promise.resolve();
+    const onSubmitHandler = jest.fn(() => promise);
+    render(<LoginForm onSubmit={onSubmitHandler} />);
+
+    userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
+    await act(() => promise);
+    expect(onSubmitHandler).toHaveBeenCalledTimes(1);
+    expect(onSubmitHandler).toHaveBeenCalledWith("", "");
   });
 
   it("goes into the signing-in status when submitting the form", async () => {
