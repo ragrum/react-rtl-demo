@@ -50,8 +50,9 @@ API mocking with [Mocking Service Worker](https://mswjs.io/).
 
 [Static vs Unit vs Integration vs E2E Testing for Frontend Apps](https://kentcdodds.com/blog/unit-vs-integration-vs-e2e-tests)
 
-
 [Fix the "not wrapped in act(...)" warning](https://kentcdodds.com/blog/fix-the-not-wrapped-in-act-warning)
+
+[Write tests. Not too many. Mostly integration.](https://kentcdodds.com/blog/write-tests)
 
 ### Snapshot Testing
 
