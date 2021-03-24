@@ -38,6 +38,8 @@ User events simulation library [user-event](https://testing-library.com/docs/eco
 
 API mocking with [Mocking Service Worker](https://mswjs.io/).
 
+[React hooks testing utilities](https://react-hooks-testing-library.com/)
+
 ### Articles
 
 [Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
