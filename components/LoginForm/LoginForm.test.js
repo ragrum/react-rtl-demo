@@ -15,8 +15,32 @@ describe("LoginForm rendering", () => {
     render(<LoginForm />);
 
     expect(
-      screen.getByRole("heading", { name: /Sign in to your account/ })
+      screen.getByRole("heading", { name: /Sign in to your account/i })
     ).toBeInTheDocument();
+  });
+
+  it("renders its heading centered", () => {
+    render(<LoginForm />);
+
+    expect(
+      screen.getByRole("heading", { name: /Sign in to your account/i })
+    ).toHaveClass("text-center");
+  });
+
+  it("renders its heading centered (snapshot)", () => {
+    render(<LoginForm />);
+
+    const heading = screen.getByRole("heading", {
+      name: /Sign in to your account/i,
+    });
+
+    expect(heading).toMatchInlineSnapshot(`
+      <h2
+        class="mt-6 text-center text-3xl font-extrabold text-gray-900"
+      >
+        Sign in to your account
+      </h2>
+    `);
   });
 
   it("renders email and password fields", () => {
@@ -36,27 +60,29 @@ describe("LoginForm rendering", () => {
     render(<LoginForm />);
 
     expect(
-      screen.getByRole("link", { name: /Forgot your password?/ })
+      screen.getByRole("link", { name: /Forgot your password/i })
     ).toBeInTheDocument();
   });
 
   it("renders submit button", () => {
     render(<LoginForm />);
 
-    expect(screen.getByRole("button", { name: /Sign in/ })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /Sign in/i })
+    ).toBeInTheDocument();
   });
 
   it("renders alternative login links", () => {
     render(<LoginForm />);
 
     expect(
-      screen.getByRole("link", { name: /Sign in with Facebook/ })
+      screen.getByRole("link", { name: /Sign in with Facebook/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Sign in with Twitter/ })
+      screen.getByRole("link", { name: /Sign in with Twitter/i })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /Sign in with GitHub/ })
+      screen.getByRole("link", { name: /Sign in with GitHub/i })
     ).toBeInTheDocument();
   });
 });
@@ -165,5 +191,12 @@ describe("LoginForm working", () => {
     userEvent.type(screen.getByLabelText("Password"), "12345");
     userEvent.click(screen.getByRole("button", { name: /Sign in/ }));
     expect(await screen.findByText(/success/i)).toBeInTheDocument();
+  });
+
+  it("has remember me checkbox checked after clicking it", async () => {
+    render(<LoginForm />);
+
+    userEvent.click(screen.getByLabelText("Remember me"));
+    expect(screen.getByLabelText("Remember me")).toBeChecked();
   });
 });
