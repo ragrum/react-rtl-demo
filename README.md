@@ -26,4 +26,28 @@ npm run test:watch
 
 The project doesn't have to be running to run the tests, they're independent. The tests use [MSW](https://mswjs.io/) for API mocking.
 
-## Resources
+## Resources and Notes
+
+### Snapshot Testing
+
+To keep snapshots short, prefer `toMatchInlineSnapshot` over `toMatchSnapshot`.
+
+```js
+  it("renders its heading centered (snapshot)", () => {
+    render(<LoginForm />);
+
+    const heading = screen.getByRole("heading", {
+      name: /Sign in to your account/i,
+    });
+
+    expect(heading).toMatchInlineSnapshot(`
+      <h2
+        class="mt-6 text-center text-3xl font-extrabold text-gray-900"
+      >
+        Sign in to your account
+      </h2>
+    `);
+  });
+```
+
+When using [toMatchInlineSnapshot](https://jestjs.io/docs/snapshot-testing#inline-snapshots) you'll need to install `prettier`, which is used to format the argument passed to `toMatchInlineSnapshot` automatically for you.
