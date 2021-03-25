@@ -40,6 +40,8 @@ API mocking with [Mocking Service Worker](https://mswjs.io/).
 
 [React hooks testing utilities](https://react-hooks-testing-library.com/)
 
+[About Queries / Priority](https://testing-library.com/docs/queries/about#priority)
+
 ### Articles
 
 [Testing Implementation Details](https://kentcdodds.com/blog/testing-implementation-details)
