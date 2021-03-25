@@ -64,6 +64,8 @@ API mocking with [Mocking Service Worker](https://mswjs.io/).
 
 [Write tests. Not too many. Mostly integration.](https://kentcdodds.com/blog/write-tests)
 
+[Write fewer, longer tests](https://kentcdodds.com/blog/write-fewer-longer-tests)
+
 ### Snapshot Testing
 
 To keep snapshots short, prefer `toMatchInlineSnapshot` over `toMatchSnapshot`.
