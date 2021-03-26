@@ -66,6 +66,8 @@ API mocking with [Mocking Service Worker](https://mswjs.io/).
 
 [Write fewer, longer tests](https://kentcdodds.com/blog/write-fewer-longer-tests)
 
+[Common mistakes with React Testing Library](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library)
+
 ### Snapshot Testing
 
 To keep snapshots short, prefer `toMatchInlineSnapshot` over `toMatchSnapshot`.
